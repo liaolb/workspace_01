@@ -1,0 +1,20 @@
+import tornado.wsgi
+from  datetime  import  *  
+import time
+import sys
+sys.path.append("Manager/")
+import CommentManager
+sys.path.append("Interface/")
+import DBInterface
+
+class CustomerCommentHandler(tornado.web.RequestHandler):
+    def get(self):
+        record_id = self.get_argument('recordId')
+        self.render("../static/template/CustomerComment.html", recordId = record_id)
+
+    def post(self):
+        recordId = self.get_argument('recordId')
+        starRating = self.get_argument('starRating')
+        content = self.get_argument('comment')
+        commentTime = datetime.now().strftime("%y-%m-%d %H:%M:%S")
+        CommentManager.set_comment(recordId, starRating, content, commentTime)

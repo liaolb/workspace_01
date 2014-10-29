@@ -1,0 +1,226 @@
+    <!-- 车店信息页面  -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+        <meta name="viewport"content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="/static/css/bootstrap.css">
+        <link rel="stylesheet" href="http://lib.vipsinaapp.com/js/jquery-mobile/1.3.1/jquery.mobile-1.3.1.css">
+        <link rel="stylesheet" href="/static/css/bootstrap-responsive.css">
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/CustomerShopDetail.css"> 
+        <script type="text/javascript" src="/static/js/jquery-1.9.0.min.js"></script>
+        <script type="text/javascript" src="http://lib.vipsinaapp.com/js/jquery-mobile/1.3.1/jquery.mobile-1.3.1.js"></script>
+        <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/js/bootstrap.js"></script>
+        <style>
+        
+        </style>
+         <SCRIPT >
+             var isFavor = '{{isFavor}}';
+             var customerId = "{{customerId}}";
+             var shopId_favor = "{{shopId}}";
+
+             function initFavor(){
+               if(isFavor=="False"){
+                       $(".ui-icon-shadow").removeClass().addClass('ui-icon ui-icon-star ui-icon-shadow no');
+                }
+                else{
+                       $(".ui-icon-shadow").removeClass().addClass('ui-icon ui-icon-star ui-icon-shadow yes');
+                }
+            }
+
+             function countNum(){
+                 if(isFavor=="False"){
+                     $(".ui-icon-shadow").removeClass().addClass('ui-icon ui-icon-star ui-icon-shadow yes');
+                     isFavor="True";
+                 }
+                 else{
+                     $(".ui-icon-shadow").removeClass().addClass('ui-icon ui-icon-star ui-icon-shadow no');
+                     isFavor="False";
+                 }  
+                $.ajax({
+                    type: "post",
+                    url: "/customershopdetail",
+                    data: {
+                        shopId_favor:shopId_favor,
+                        customerId:customerId,
+                        isFavor:isFavor
+                    },
+                    success: function(data){
+                        alert(data);
+                    },
+                    dataType:"json"
+                });
+             }
+
+             
+            function send_msg(shopId_order){
+                $.ajax({
+                    type: "post",
+                    url: "/customershopdetail",
+                    data: {
+                        shopId_order:shopId_order,
+                        customerId:customerId
+                    },
+                    success: function(data){
+                        alert(data);
+                    },
+                    dataType:"json"
+
+                });
+            }
+
+
+                minsold=30;
+                seconds = 59;
+                function show_time(){
+                  if(minsold != 0){
+                         window.setTimeout("show_time()", 1000);
+                         if(seconds == 59)
+                             minsold=Math.floor(minsold-1);
+                         seconds=Math.floor(seconds);
+                        span_dt_dt.innerHTML=minsold+" 分 "+seconds+" 秒" ;
+                        if(seconds != 0)
+                            seconds = (seconds-1);
+                        else
+                            seconds = 59;
+                  }
+                  else{
+                    span_dt_dt.innerHTML="预约时间已到" ;
+                  }
+                }
+                show_time();
+            
+            </SCRIPT>
+        
+        <title>一键洗车</title>
+    </head>
+    
+    <body onload="initFavor()">
+       <div data-role="page" id="pageone">
+           <div data-role="header">
+            <h1>{{shopName}}</h1>
+              <div class="head-right">
+                  <a href="#" onclick="countNum();" data-role="button" data-icon="star" id="collect" class="no" style="float:right;">收藏</a>
+              </div>
+          </div>
+        
+          <div class="content" data-role="content">
+              <div id="myCarousel" class="carousel slide">
+                       <ol class="carousel-indicators">
+                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                            <li data-target="#myCarousel" data-slide-to="2"></li>
+                       </ol>
+                      <!-- Carousel items -->
+                      <div class="carousel-inner" >
+                            <div class="active item"><img style="margin:0 auto;" src="{{shopPhotoUrls[0]}}" alt></div>
+                            {% if len(shopPhotoUrls)>1 %}
+                                {% for imageUrl in shopPhotoUrls[1:] %}
+                                <div class="item"><img style="margin:0 auto;" src="{{imageUrl}}" alt></div>
+                                {% end %}
+                            {% end %}
+                      </div>
+                      <!-- Carousel nav -->
+                      <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+                      <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+                </div>
+       
+                <div id="myCarousel" class="mycontent" style="margin:0 auto;" >
+                      <div>
+                            <span class="shopName">{{shopName}}</span>
+                      </div>
+                       <br/>
+                  
+                      <span class="starRating">  星级: </span> <i class="mystar-light"  data-transition="slide">&nbsp;</i><i class="mystar-none"  data-transition="slide">&nbsp;</i><br/>
+                      <span class="phone">  电话:  </span>{{shopPhone}}  <br/>
+                      <span class="">  地址: </span> <div class="address" >{{address}}  </div>
+                      <span class="">  介绍：</span><div class="description" >驰加汽车服务中心,为您的爱车提供全面的汽车保养, 登陆官网快速{{description}} </div>
+            
+                </div>
+          </div>
+           
+           <div class="commentNum">
+              <p>该店共有<span style="font-size:34px;">{{len(comments)}}</span>条<a href="#pagefour"  data-transition="pop">评价详情>></a></p>
+           </div>
+           
+            <div data-role="footer">
+               <div class="input-group">
+                   <!-- if 可预约 -->
+                      <a onclick="send_msg('{{shopId}}');" href="#pagetwo" class="input-control" data-transition="pop" >预约</a>
+                    <!--  else 不可预约
+                      <span style="color:gray;"> 预约</span> -->
+                      
+                   <a onclick="document.location.href='http://2.cargotest.sinaapp.com/customernavigate?shopId={{shopId}}'" class="input-control" data-transition="pop" >导航</a>
+               </div>
+            </div>   
+
+          </div>
+
+          <!-- 车店评价详情页面  -->
+        <div data-role="page" id="pagefour">
+              <div data-role="header">
+                <h1>{{shopName}}</h1>
+              </div>
+            
+              <div class="page-content" style="">
+               <div class="commentNum">
+                      <p>该店共有<span style="font-size:34px;">5</span>条评价详情</p>
+                   </div>
+                   {% for comment in comments %}
+                   <div class="commentBorder">
+                        <span class="comment">姓名暂时没办法显示
+                          <p >
+                            {{comment[2]}}
+                          </p>
+                        </span>
+                   </div>
+                   {% end %} 
+                    <br/>
+
+
+               </div>    
+               <div data-role="footer">
+                    <h1><a href="#" data-transition="pop">加载更多 》</a></h1>
+               </div>
+        </div> 
+        
+        
+        <!-- 预约成功页面  -->
+       <div data-role="page" id="pagetwo">
+          <div data-role="header">
+              <h1>预约信息</h1>
+          </div>
+          <div data-role="content">
+               <p style="display:block;width:130px;margin:30px auto;font-size:30px;color:#383838;"> 预约成功 </p>
+                          
+            <!--     <span>距离预约时间还剩：</span>
+              <span id="span_dt_dt" style='border:1px  black;background-color:#FFFFFF' ></span> -->
+              <br/>
+            
+          </div>
+          <div data-role="footer">
+            <h1><a href="#pageone" data-transition="pop" >返回页面</a></h1>
+          </div>
+       </div> 
+        
+       <!-- 导航页面  -->
+       <div data-role="page" id="pagethree">
+          <div data-role="header">
+              <h1>进入导航中......</h1>
+          </div>
+          <div data-role="content">
+              <p style="text-align:center;">正在为您加载导航，请稍等。</p>
+ 
+              <br/>
+            <a href="#pageone" data-transition="pop" >返回页面</a>
+          </div>
+          <div data-role="footer">
+              <h1>导航</h1>
+          </div>
+       </div> 
+
+   </body>
+</html>

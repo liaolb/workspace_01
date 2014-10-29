@@ -1,0 +1,26 @@
+import sys
+sys.path.append("Interface/")
+import KVDBInterface
+
+def set_order_num(shopId, orderNum):
+    """set Order number of shop
+
+    Args:
+        shopId:
+        orderNum:
+
+    Returns:
+    """
+    KVDBInterface.set(shopId, orderNum)
+
+def get_order_num(shopId):
+    """get Order number of shop
+
+    Args:
+        shopId:
+
+    Returns:
+        orderNum:
+    """
+    orderNum = KVDBInterface.get(shopId)
+    return orderNum

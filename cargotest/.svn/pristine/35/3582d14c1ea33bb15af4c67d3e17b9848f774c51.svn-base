@@ -1,0 +1,28 @@
+import tornado.wsgi
+import sys
+sys.path.append("Manager/")
+import ShopInfoManager
+import FavorManager
+import OAuthManager
+
+class CustomerFavorHandler(tornado.web.RequestHandler):
+    def get(self):
+        customerId = OAuthManager.get_openid_base(self)
+
+        # get favor shop by customerId
+        shopIdList = FavorManager.get_shopId_list(customerId)
+        
+        items = []
+        for shop in shopIdList:
+            shopImg = 'http://cargotest-cargo.stor.sinaapp.com/test.jpg'
+            shopId = shop[0]
+            shopInfo = ShopInfoManager.get_shopAllInfo(shopId)
+            shopName = shopInfo[1]
+            starRating = shopInfo[7]*18
+            darkStarRating = (5-shopInfo[7])*18
+            shopPhone = shopInfo[4]
+            distance = 100
+            item = [shopImg, shopName, starRating, shopPhone, shopId, distance, darkStarRating]
+            items.append(item)
+
+        self.render("../static/template/CustomerFavor.html",customerId=customerId, items=items)

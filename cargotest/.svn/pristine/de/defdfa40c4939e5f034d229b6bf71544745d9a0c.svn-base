@@ -1,0 +1,13 @@
+import tornado.wsgi
+import sae.kvdb
+import sys
+sys.path.append("Manager/")
+import ShopInfoManager
+import FavorManager
+import OAuthManager
+import PhotoManager
+import BaiduMapManager
+
+class CustomerHelpHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("../static/template/CustomerHelp.html")

@@ -1,0 +1,205 @@
+# coding=utf-8
+import sys
+sys.path.append("Interface/")
+import DBInterface
+import StorageInterface
+
+def get_shopAllInfo(shopId):
+    '''get all information of shop
+
+    Args:
+        shopId
+
+    Returns:
+        result[0]:shopId
+        result[1]:shopName
+        result[2]:ownerName
+        result[3]:address
+        result[4]:shopPhone
+        result[5]:longitude
+        result[6]:latitude
+        result[7]:starRating
+        result[8]:description
+        result[9]:account
+        !result[10]:password
+    '''
+    sql = "SELECT * FROM shop WHERE shopId = %s"
+    result = DBInterface.query_for_one(sql, shopId)
+    return result
+
+def get_shopName(shopId):
+    sql = "SELECT shopName FROM shop WHERE shopId = %s"
+    result = DBInterface.query_for_one_col(sql, shopId)
+    return result
+
+def get_ownerName(shopId):
+    sql = "SELECT ownerName FROM shop WHERE shopId = %s"
+    result = DBInterface.query_for_one_col(sql, shopId)
+    return result
+
+def get_address(shopId):
+    sql = "SELECT address FROM shop WHERE shopId = %s"
+    result = DBInterface.query_for_one_col(sql, shopId)
+    return result
+
+def get_shopPhone(shopId):
+    sql = "SELECT shopPhone FROM shop WHERE shopId = %s"
+    result = DBInterface.query_for_one_col(sql, shopId)
+    return result
+
+def get_longitude(shopId):
+    sql = "SELECT longitude FROM shop WHERE shopId = %s"
+    result = DBInterface.query_for_one_col(sql, shopId)
+    return result
+
+def get_latitude(shopId):
+    sql = "SELECT latitude FROM shop WHERE shopId = %s"
+    result = DBInterface.query_for_one_col(sql, shopId)
+    return result
+
+def get_starRating(shopId):
+    sql = "SELECT starRating FROM shop WHERE shopId = %s"
+    result = DBInterface.query_for_one_col(sql, shopId)
+    return result
+
+def get_description(shopId):
+    sql = "SELECT description FROM shop WHERE shopId = %s"
+    result = DBInterface.query_for_one_col(sql, shopId)
+
+def has_account(account):
+    '''judge the accout is occupied or not
+
+    Args:
+        account:
+
+    Returns:
+        True: accout is occupied
+        False: accout is not occupied
+    '''
+    sql = "SELECT shopId FROM shop WHERE account = %s"
+    result = DBInterface.query_for_one_col(sql, account)
+    if result:
+        return True
+    else:
+        return False
+
+def check_login(account, password):
+    sql = "SELECT password FROM shop WHERE account = %s"
+    result = DBInterface.query_for_one_col(sql, account)
+    if (result and result == password):
+        return True
+    else:
+        return False
+
+
+def add_shop(shopName, ownerName, address, shopPhone, longitude,
+        latitude, description, account, password):
+    '''add shop when shop register
+
+    Args:
+        shopName:
+        ownerName:
+        address:
+        shopPhone:
+        longtitude:
+        latitude:
+        description:
+        account:
+        password:
+
+    Returns:
+        shopId:
+    '''
+    sql = "INSERT INTO shop  (shopName, ownerName, address, shopPhone, longitude, latitude, description, account, password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    param = (shopName, ownerName, address, shopPhone, longitude,
+            latitude, description, account, password)
+    DBInterface.execute_sql(sql, param)
+    shopId = get_shopId_by_account(account)
+    return shopId
+
+def get_shopId_by_account(account):
+    sql = "SELECT shopId FROM shop WHERE account = %s"
+    result = DBInterface.query_for_one_col(sql, account)
+    return result
+
+def get_shop_id_by_name(shop_name):
+    shop_name = '%'+shop_name+'%'
+    sql = "SELECT shopId FROM shop WHERE shopName LIKE %s"
+    result = DBInterface.query_for_all(sql, shop_name)
+    return result    
+
+def set_shopPhone(shopId, shopPhone):
+    '''set shop phone
+
+    Args:
+        shopPhone:
+
+    Returns:
+    '''
+    sql = "UPDATE shop SET shopPhone=%s WHERE shopId=%s"
+    param = (shopPhone, shopId)
+    DBInterface.execute_sql(sql, param)
+
+def set_description(shopId, description):
+    """set shop description
+
+    Args:
+        shopId:
+        description:
+
+    Returns:
+    """
+    sql = "UPDATE shop SET description=%s WHERE shopId=%s"
+    param = (description, shopId)
+    DBInterface.execute_sql(sql, param)
+
+def set_password(shopId, password):
+    """set shop password
+
+    Args:
+        shopId:
+        password:
+
+    Returns:
+    """
+    sql = "UPDATE shop SET password=%s WHERE shopId=%s"
+    param = (password, shopId)
+    DBInterface.execute_sql(sql, param)
+
+def add_shop_certificates(shop_id, business_certificate=None, transport_certificate=None, other_certificate=None):
+    dic = dict()
+    if business_certificate:
+        dic['business_certificate.jpg'] = business_certificate
+    if transport_certificate:
+        dic['transport_certificate.jpg'] = transport_certificate
+    if other_certificate:
+        dic['other_certificate.jpg'] = other_certificate
+
+    StorageInterface.add_objects('shops', 'certificates/'+str(shop_id), dic)
+
+#TODO:(HXM) 经纬度范围有待调整
+def get_shop_nearby(longitude, latitude):
+    '''get all shop nearby
+
+    Args:
+        longitude:
+        latitude:
+
+    Returns:
+        result[0][0]:shopId
+        result[0][1]:shopName
+        result[0][2]:ownerName
+        result[0][3]:address
+        result[0][4]:shopPhone
+        result[0][5]:longitude
+        result[0][6]:latitude
+        result[0][7]:starRating
+        result[0][8]:description
+        result[0][9]:account
+        !result[0][10]:password
+        result[1][0]:...
+    '''
+    sql = "SELECT * FROM shop WHERE longitude < %s +0.03 AND longitude > %s - 0.03 AND latitude < %s + 0.03 AND latitude > %s - 0.03"
+    location = (longitude, longitude, latitude, latitude)
+    result = DBInterface.query_for_all(sql, location)
+    return result

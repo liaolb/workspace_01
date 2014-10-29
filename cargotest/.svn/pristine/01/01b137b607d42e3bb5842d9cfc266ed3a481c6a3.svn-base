@@ -1,0 +1,42 @@
+import tornado.wsgi
+import sae.kvdb
+import sys
+sys.path.append("Manager/")
+import ShopInfoManager
+import FavorManager
+import OAuthManager
+import PhotoManager
+import BaiduMapManager
+
+class CustomerFavorHandler(tornado.web.RequestHandler):
+    def get(self):
+        customerId = OAuthManager.get_openid_base(self)
+
+        # get favor shop by customerId
+        shopIdList = FavorManager.get_shopId_list(customerId)
+        
+        items = []
+        for shop in shopIdList:
+            shopId = shop[0]
+            shopImg = PhotoManager.get_shop_photo_urls(shopId)[0]
+            shopInfo = ShopInfoManager.get_shopAllInfo(shopId)
+            shopName = shopInfo[1]
+            starRating = round(shopInfo[7])*18
+            darkStarRating = (5-round(shopInfo[7]))*18
+            shopPhone = shopInfo[4]
+
+            kv = sae.kvdb.KVClient()
+            Location = None
+            Location = kv.get(str(customerId))
+            kv.disconnect_all()
+
+            ori_lng = str(float(Location.split(',')[0]))
+            ori_lat = str(float(Location.split(',')[1]))
+            des_lng = ShopInfoManager.get_longitude(shop[0])
+            des_lat = ShopInfoManager.get_latitude(shop[0])
+            distance = float(BaiduMapManager.get_distance_by_latlng(ori_lat, ori_lng, des_lat, des_lng)) / 1000
+            distance = '%.2f' % distance # Keep two decimal places
+            item = [shopImg, shopName, starRating, shopPhone, shopId, distance, darkStarRating]
+            items.append(item)
+
+        self.render("../static/template/CustomerFavor.html",customerId=customerId, items=items)

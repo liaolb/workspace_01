@@ -1,0 +1,76 @@
+*{
+    list-style-type:none;
+}
+ body{}
+
+#pageone .page{
+     width:250px;
+     margin:0 auto;
+     margin-top:20px;
+}
+#pageone .page .input-row{
+    padding:5px;
+}
+
+#pageone .page .ui-btn-inner{
+    
+}
+
+#pageone .page .input-row .input-text{
+    display:inline-block;
+    padding:5px;
+    font-size:18px;
+}
+
+#pageone .page .input-row .label-name,.label-phone,.label-carNum{
+    margin:0;
+    margin-right:90px;
+    background-color:#DDDDDD;
+}
+
+.input-row{
+     width:250px;  
+}
+
+.page-content{
+     padding:4px;
+}
+
+.ui-shadow-inset{
+     width:150px;
+     display:inline-block;
+     margin:0px;
+}
+
+.input-row .ui-select{
+     display:inline-block;
+     float:left;
+     width:82px;
+     line-height:16px;
+}
+
+.ui-body-c{
+     background-color:#DDDDDD;  
+}
+
+.input-row .ui-select .ui-btn-icon-right{
+     margin:0;
+   width:100px;
+}
+
+.input-row .mybtn{
+    display:inline-block;
+    margin-right:30px; 
+    float:right;
+}
+.ui-radio{
+    display:inline-block;
+
+
+}
+.ui-btn-icon-left{
+    display:inline-block;
+    width:100px;   
+    height:40px;
+    
+}

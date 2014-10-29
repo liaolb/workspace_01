@@ -1,0 +1,80 @@
+# coding=utf-8
+import urllib
+import urllib2
+import httplib
+import json
+import sys
+sys.setdefaultencoding('utf8')
+sys.path.append("Manager/")
+import WechatMessageTemplate
+
+#TODO(HXM) json中文消息回复测试
+def record_remind(openId):
+    """remind customer of record when 30 minutes passed
+
+    Args:
+        openId:
+
+    Returns:
+    """
+    # get access_token
+    url_request_token = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx97b25a5e35916ef6&secret=eff7f6509ec87516cb0c442aec7dd7e9"
+    urlfile = urllib2.urlopen(url_request_token)
+    data_token = urlfile.read()
+    data_token = json.loads(data_token)
+    access_token = data_token["access_token"]
+    # content = content.encode('utf-8')
+    # data = {
+    #         "touser":openId,
+    #         "msgtype":"text",
+    #         "text":
+    #             {
+    #             "content":content
+    #             }
+    #         }
+    # data_json = json.dumps(data)
+
+    # send remind message
+    url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s" % access_token
+    # Warnning: content内容只能为中文（包括中文标点，。！）！！！
+    content = "您好！您的预约时间已到！"
+    print len(content)
+    
+    data_json = """{"msgtype": "text", "touser": "%s", "text": {"content": "%s"}}""" % (openId, content)
+    req = urllib2.Request(url)
+
+    # urllib2 use body.length to calculate the Content-Length(every utf8 1 bit), but actually every chinese charecter  
+    content_len = len(data_json)+len(content)/3*2
+    req.add_header('Content-Length', content_len)
+
+    res = urllib2.urlopen(req, data_json)
+
+def customer_breach_remind(openId):
+    """remind customer of record breach when 1 hour passed
+
+    Args:
+        openId:
+
+    Returns:
+    """
+    # get access_token
+    url_request_token = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx97b25a5e35916ef6&secret=eff7f6509ec87516cb0c442aec7dd7e9"
+    urlfile = urllib2.urlopen(url_request_token)
+    data_token = urlfile.read()
+    data_token = json.loads(data_token)
+    access_token = data_token["access_token"]
+
+    # send remind message
+    url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s" % access_token
+    # Warnning: content内容只能为中文（包括中文标点，。！）！！！
+    content = "您好！您的预约时间已超过半小时！"
+    print len(content)
+    
+    data_json = """{"msgtype": "text", "touser": "%s", "text": {"content": "%s"}}""" % (openId, content)
+    req = urllib2.Request(url)
+
+    # urllib2 use body.length to calculate the Content-Length(every utf8 1 bit), but actually every chinese charecter  
+    content_len = len(data_json)+len(content)/3*2
+    req.add_header('Content-Length', content_len)
+
+    res = urllib2.urlopen(req, data_json)

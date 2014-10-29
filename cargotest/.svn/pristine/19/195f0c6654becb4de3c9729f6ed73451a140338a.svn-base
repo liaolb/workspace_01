@@ -1,0 +1,61 @@
+$(".label-name").css({"font-weight":"900","font-style":"italic"});
+$(".label-phone").css({"font-weight":"900","font-style":"italic"});
+$(".label-carNum").css({"font-weight":"900","font-style":"italic"});
+$(document).ready(function(){ 
+    selectValue('province','{{customer_info[5]}}');
+    selectValue('city','{{customer_info[6]}}');  
+
+    $("#update").click(function(){
+        $(".label-name").removeAttr("readonly");
+        $(".label-phone").removeAttr("readonly");
+        $(".label-carNum").removeAttr("readonly");
+        $(".ui-body-c").css("background-color","#FFFFFF");
+        $(".ui-btn-shadow").css("box-shadow","0 1px 4px rgba(0,0,0,1)");  
+        $(".ui-input-text").css("box-shadow","rgb(0, 0, 0) 0px 0px 0px;");
+        $(".label-name").css({"font-weight":"normal","font-style":"normal"});
+        $(".label-phone").css({"font-weight":"normal","font-style":"normal"});
+        $(".label-carNum").css({"font-weight":"normal","font-style":"normal"});
+
+    
+    });
+   $("#myForm").click(function(){
+        $(".label-name").attr("readonly","readonly");
+        $(".label-phone").attr("readonly","readonly");
+        $(".label-carNum").attr("readonly","readonly");
+        $(".ui-body-c").css("background-color","#F5F5F5");
+        $(".ui-body-c").css("box-shadow","0 1px 4px rgba(0,0,0,0)");
+        $(".label-name").css({"font-weight":"900","font-style":"italic"});
+        $(".label-phone").css({"font-weight":"900","font-style":"italic"});
+        $(".label-carNum").css({"font-weight":"900","font-style":"italic"});
+    });
+
+});
+function formSubmit(){
+    alert("dsaf");
+     // $("#formid").submit();
+}
+
+function selectValue(sId,value){  
+    // alert(value);
+    // alert(sId);
+    // S("#"+sId).val(value);
+    var ops = document.getElementById(sId);
+     // alert(ops.value);
+    ops.value = value;
+    // alert(ops.value);
+
+
+
+   // alert(ops.length);
+    for(var i=0;i<ops.length; i++){  
+        var tempValue = ops[i].value;
+        // alert(tempValue);
+        ops[i].selected = false;
+        if(tempValue == value)  
+        {  
+            // alert(tempValue);
+            ops[i].selected = true;  
+        }  
+    }  
+}  
+

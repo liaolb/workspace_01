@@ -1,0 +1,30 @@
+import sae.kvdb
+
+def set_order_num(shopId, orderNum):
+    """set Order number of shop
+
+    Args:
+        shopId:
+        orderNum:
+
+    Returns:
+    """
+    kv = sae.kvdb.KVClient()
+    key = str(shopId)
+    kv.set(key, orderNum)
+    kv.disconnect_all()
+
+def get_order_num(shopId):
+    """get Order number of shop
+
+    Args:
+        shopId:
+
+    Returns:
+        orderNum:
+    """
+    kv = sae.kvdb.KVClient()
+    key = str(shopId)
+    orderNum = kv.get(key)
+    kv.disconnect_all()
+    return orderNum

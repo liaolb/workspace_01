@@ -1,0 +1,71 @@
+# coding=utf-8
+import urllib
+import urllib2
+import json
+import sys
+sys.setdefaultencoding('utf8')
+sys.path.append("Manager/")
+import WechatMessageTemplate
+
+#TODO(HXM) json中文消息回复测试
+def record_remind(openId):
+    # get access_token
+    url_request_token = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx97b25a5e35916ef6&secret=eff7f6509ec87516cb0c442aec7dd7e9"
+    urlfile = urllib2.urlopen(url_request_token)
+    data_token = urlfile.read()
+    data_token = json.loads(data_token)
+    access_token = data_token["access_token"]
+
+    # send remind message
+    url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s" % access_token
+    req = urllib2.Request(url)
+    
+    # data = '{"touser":%s,"msgtype":"text","text":{"content":"您的预约时间已到!"}}' % openId
+    # data_encode = json.loads(str(data))
+    # data_json = json.dumps(data_encode, ensure_ascii=False)
+    content = "你的预约时间已到!"
+    content = content.encode('utf-8')
+    data = {
+            "touser":openId,
+            "msgtype":"text",
+            "text":
+                {
+                "content":content
+                }
+            }
+
+    data_json = json.dumps(data, ensure_ascii=False)
+
+    # data_json = urllib.urlencode(data_json)
+    print data_json
+    res = urllib2.urlopen(req, data_json)
+    # print res
+    print "end"
+
+def customer_breach_remind(openId):
+    # get access_token
+    url_request_token = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx97b25a5e35916ef6&secret=eff7f6509ec87516cb0c442aec7dd7e9"
+    urlfile = urllib2.urlopen(url_request_token)
+    data_token = urlfile.read()
+    data_token = json.loads(data_token)
+    access_token = data_token["access_token"]
+
+    # send remind message
+    url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s" % access_token
+    req = urllib2.Request(url)
+    
+    data = {
+            "touser":openId,
+            "msgtype":"text",
+            "text":
+                {
+                "content":"你已违约!"
+                }
+            }
+
+    data_json = json.dumps(data)
+
+    # data_json = urllib.urlencode(data_json)
+    print data_json
+    res = urllib2.urlopen(req, data_json)
+    # print res

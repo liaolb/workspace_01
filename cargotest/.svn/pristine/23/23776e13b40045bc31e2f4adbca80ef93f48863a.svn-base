@@ -1,0 +1,48 @@
+import tornado.wsgi
+import sae.kvdb
+import sys
+import datetime
+sys.path.append("Handler/")
+import CustomerBaseHandler
+sys.path.append("Manager/")
+import ShopInfoManager
+import RecordManager
+import AutoOrderManager
+import BaiduMapManager
+
+class CustomerOrderHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("../static/template/CustomerPlateNumError.html")
+
+    def post(self):
+        # add record when customer make an appointment
+        customerId = self.get_argument('customerId')
+        shopId_order = self.get_argument('shopId_order')
+
+        kv = sae.kvdb.KVClient()
+        auto_order_num = kv.get(str(shopId_order))
+        kv.disconnect_all()
+        print auto_order_num
+        
+        if RecordManager.has_customer_unfinished_record(customerId):
+            self.write("has unfinished record")
+        elif auto_order_num <= 0:
+            self.write("has no auto order")
+        else:
+            shopId_order = self.get_argument('shopId_order')
+            recordTime = str(datetime.datetime.now()).split('.')[0]
+            # get customer location
+            kv = sae.kvdb.KVClient()
+            Location = kv.get(str(customerId))
+            kv.disconnect_all()
+            ori_lng = float(Location.split(',')[0])
+            ori_lat = float(Location.split(',')[1])
+
+            # calculate journeyTime
+            des_lng = ShopInfoManager.get_longitude(shopId_order)
+            des_lat = ShopInfoManager.get_latitude(shopId_order)
+            duration = BaiduMapManager.get_duration_by_latlng(ori_lat, ori_lng, des_lat, des_lng)
+            arriveTime = datetime.datetime.now() + datetime.timedelta(seconds = duration)
+            journeyTime = str(arriveTime).split('.')[0]
+
+            RecordManager.add_record(customerId, shopId_order, recordTime, journeyTime)

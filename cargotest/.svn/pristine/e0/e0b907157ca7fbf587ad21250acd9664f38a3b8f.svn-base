@@ -1,0 +1,98 @@
+#coding=utf-8
+
+from sae.storage import Bucket
+from sae.ext.storage import monkey
+monkey.patch_all()
+import os
+
+def get_urls(bucket_name, folder_path):
+    '''get urls from storage
+
+    Args:
+        bucket_name: the name of bucket
+        folder_path: path of urls of files wanted, must be end with '/', for example, 'images/3/'
+
+    Returns:
+        urls: list of urls of files the bucket and folder_path specified
+    '''
+    bucket = Bucket(bucket_name)
+
+    folder_path+='/' # folder should be end with '/'
+
+    # if no file
+    files = [i for i in bucket.list(path=folder_path)]
+    if len(files) == 0:
+        return []
+
+    # else has files
+    filenames = []
+    for item in [i['name'] for i in bucket.list(path=folder_path) if i['name'][-3:]=="jpg"]:
+        filenames.append(item)
+    return [bucket.generate_url(i) for i in filenames]
+
+def add_objects(bucket_name, folder_path, objects):
+    '''add objects
+
+    Args:
+        bucket: name of bucket
+        folder_path: folder path specified
+        objects: dic['file_name']=file_data
+    '''
+    bucket = Bucket(bucket_name)
+
+    folder_path += '/' # folder should be end with '/'
+    
+    # debug
+    # print 'folder_path', folder_path
+
+    for key in objects.keys():
+        bucket.put_object(folder_path+key,objects[key])
+
+        # debug
+        print 'put_object',folder_path+key
+
+def add_object(bucket_name, folder_path, object_name, object_data):
+    bucket = Bucket(bucket_name)
+    if folder_path[-1]!='/':
+        folder_path += '/'
+    # if not existed
+    if not os.path.exists(folder_path+object_name):
+        bucket.put_object(folder_path+object_name, object_data)
+        print 'add_object:', 'file:', folder_path+object_name
+
+def delete_object(bucket_name, folder_path, object_name):
+    bucket = Bucket(bucket_name)
+    if folder_path[-1]!='/':
+        folder_path += '/'
+    # if existed
+    if os.path.exists(folder_path+object_name):
+        bucket.delete_object(folder_path+object_name)
+        print 'delete_object:', 'file:', folder_path+object_name
+    
+def set_object(bucket_name, folder_path, object_name, object_data):
+    print 'replace_object'
+    delete_object(bucket_name, folder_path, object_name)
+    add_object(bucket_name, folder_path, object_name, object_data)
+
+def get_maximum_file_index(bucket_name, folder_path):
+    '''get max index in specific folder in order to
+    save unexisted file name
+    '''
+    bucket = Bucket(bucket_name)
+    
+    folder_path+='/' # folder should be end with '/'
+
+    # if the folder not exists or folder has no file
+    files = [i for i in bucket.list(path=folder_path)]
+    if len(files)==0:
+        return 0
+
+    # else return the max file index
+    max_index = 0
+    for i in files:
+        print 'split',i['name'].split(folder_path)[1]
+        num = int(i['name'].split(folder_path)[1].split('.')[0])
+        if num>max_index:
+            max_index = num
+
+    return max_index+1

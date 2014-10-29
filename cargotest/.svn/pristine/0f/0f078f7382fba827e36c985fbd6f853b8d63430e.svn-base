@@ -1,0 +1,57 @@
+# coding=utf-8
+import tornado.wsgi
+import sys
+sys.path.append("Handler/")
+from CustomerBaseHandler import CustomerBaseHandler
+sys.path.append("Manager/")
+import OAuthManager
+import CustomerPersonInfoManager
+
+class CustomerPersonInfoHandler(CustomerBaseHandler):
+    def get(self):
+    	open_id = OAuthManager.get_openid_base(self)
+        self.set_secure_cookie("user", open_id)
+        customer_info = CustomerPersonInfoManager.get_customerAllInfo(open_id)
+        if customer_info==None:
+            customer_info = [open_id, '', '', '', '', '', '', '', '']
+        else:
+            print customer_info[5]
+            if customer_info[5]==None:
+                plate_num = ""
+                plate_province = "粤"
+                plate_city = "A"
+            else:
+                plate_number = customer_info[5]
+                plate_province = plate_number[0]
+                plate_city = plate_number[1]
+                plate_num = ""
+                for i in range(2, len(plate_number)):
+                    plate_num = plate_num + str(plate_number[i])
+            customer_info = [customer_info[0], customer_info[1], customer_info[2],
+                    customer_info[3], customer_info[4], plate_province, plate_city, plate_num]
+        self.render("../static/template/CustomerPersonInfo.html", customer_info=customer_info)
+
+    def post(self):
+        # get open id from cookie
+        open_id = tornado.escape.xhtml_escape(self.current_user)
+
+        customerName = self.get_argument('customerName')
+        gender = "0"
+        customerPhone = self.get_argument('customerPhone')
+        car_type = "0"
+        plateProvince = self.get_argument('plateProvince')
+        plateCity = self.get_argument('plateCity')
+        plateNum = self.get_argument('plateNum')
+        plateNumber = plateProvince+plateCity+str(plateNum)
+        CustomerPersonInfoManager.set_customer_info(open_id,
+            customerName, gender, customerPhone, car_type, plateNumber)
+
+        customer_info = CustomerPersonInfoManager.get_customerAllInfo(open_id)
+        plate_number = customer_info[5]
+        plate_province = plate_number[0]
+        plate_city = plate_number[1]
+        plate_num = plate_number[2:]
+        # plate_num = plate_number[2] + plate_number[3] + plate_number[4] + plate_number[5] + plate_number[6]
+        customer_info = [customer_info[0], customer_info[1], customer_info[2],
+                    customer_info[3], customer_info[4], plate_province, plate_city, plate_num]
+        self.render("../static/template/CustomerPersonInfo.html", customer_info=customer_info)

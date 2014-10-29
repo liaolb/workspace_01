@@ -1,0 +1,76 @@
+*{
+    list-style-type:none;
+}
+ 
+#pageone .page{
+     width:260px;
+     margin:0 auto;
+     margin-top:20px;
+}
+#pageone .page .input-row{
+    padding:5px;
+    background:#B0B0B0;
+    margin-bottom:3px;
+     width:250px;  
+    border:1px solid #AAAAAA;
+    -moz-border-radius: 11px;
+    -khtml-border-radius: 11px;
+    -webkit-border-radius: 11px;
+    border-radius: 11px;
+    behavior: url(ie-css3.htc); 
+}
+
+#pageone .page .input-row .input-text{
+    display:inline-block;
+    padding:5px;
+    font-size:18px;
+}
+
+#pageone .page .input-row .label-name,.label-phone,.label-carNum{
+    margin:0;
+    margin-right:90px;
+ 
+}
+
+
+.page-content{
+     padding:4px;
+}
+
+.ui-shadow-inset{
+     width:150px;
+     display:inline-block;
+     margin:0px;
+}
+
+.input-row .ui-select{
+     display:inline-block;
+     float:left;
+     width:82px;
+     line-height:16px;
+}
+
+.ui-body-c{
+     background-color:#D0D0D0;  
+}
+
+.input-row .ui-select .ui-btn-icon-right{
+     margin:0;
+   
+}
+
+.input-row .mybtn{
+    display:inline-block;
+    margin-right:30px; 
+    float:right;
+}
+.ui-radio{
+    display:inline-block;
+
+}
+.ui-btn-icon-left{
+    display:inline-block;
+    width:80px;   
+    height:40px;
+    
+}

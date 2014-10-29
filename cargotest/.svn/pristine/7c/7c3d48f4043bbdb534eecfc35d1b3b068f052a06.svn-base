@@ -1,0 +1,24 @@
+import sys
+sys.path.append("Interface/")
+import StorageInterface
+
+def get_shop_photo_urls(shop_id):
+    urls = StorageInterface.get_urls('shops',"images/"+str(shop_id))
+    if urls == []:
+        return ['http://cargotest-cargo.stor.sinaapp.com/test.jpg']
+    return urls
+
+# unused
+def add_shop_photo(shop_id, image_data):
+    filename = str(StorageInterface.get_maximum_file_index('shops','images/'+str(shop_id)))
+    dic = dict()
+    dic[filename+'.jpg'] = image_data
+
+    StorageInterface.add_objects('shops', 'images/'+str(shop_id), dic)
+
+def set_shop_photo(shop_id, replace_index, image_data):
+    bucket_name = 'shops'
+    folder_path = 'images/'+str(shop_id)
+    replace_photo_name = replace_index+'.jpg'
+    print 'photo path',folder_path+'/'+replace_photo_name
+    StorageInterface.set_object(bucket_name, folder_path, replace_photo_name, image_data)

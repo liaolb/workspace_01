@@ -1,0 +1,110 @@
+# coding=utf-8
+import urllib
+import urllib2
+import httplib
+import json
+import sys
+sys.setdefaultencoding('utf8')
+sys.path.append("Manager/")
+import WechatMessageTemplate
+
+#TODO(HXM) json中文消息回复测试
+def record_remind(openId):
+    # get access_token
+    url_request_token = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx97b25a5e35916ef6&secret=eff7f6509ec87516cb0c442aec7dd7e9"
+    urlfile = urllib2.urlopen(url_request_token)
+    data_token = urlfile.read()
+    data_token = json.loads(data_token)
+    access_token = data_token["access_token"]
+
+    # send remind message
+    url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s" % access_token
+    content = "v你 好                 v "
+    # content = content.encode('utf-8')
+    # data = {
+    #         "touser":openId,
+    #         "msgtype":"text",
+    #         "text":
+    #             {
+    #             "content":content
+    #             }
+    #         }
+    # data_json = json.dumps(data)
+    data_json = """{"msgtype": "text", "touser": "%s", "text": {"content": "%s"}}""" % (openId, content)
+    req = urllib2.Request(url)
+    content_len = len(data_json)+4
+    req.add_header('Content-Length', content_len)
+    # data_json = urllib.urlencode(data_json)
+    print data_json
+    res = urllib2.urlopen(req, data_json)
+    # res = urllib.request.urlopen(req,data_json)
+    for line in res.readlines():
+        print line
+    print "end"
+
+# def record_remind(openId):
+#     print "in"
+#     # get access_token
+#     url_request_token = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx97b25a5e35916ef6&secret=eff7f6509ec87516cb0c442aec7dd7e9"
+#     urlfile = urllib2.urlopen(url_request_token)
+#     data_token = urlfile.read()
+#     data_token = json.loads(data_token)
+#     access_token = data_token["access_token"]
+
+#     # send remind message
+#     url = "/cgi-bin/message/custom/send?access_token=%s" % access_token
+
+#     content = "你好"
+#     content = content.encode('utf-8')
+#     data_json = """{"msgtype": "text", "touser": "%s", "text": {"content": "%s"}}""" % (openId, content)
+#     # data = {
+#     #         "touser":openId,
+#     #         "msgtype":"text",
+#     #         "text":
+#     #             {
+#     #             "content":content
+#     #             }
+#     #         }
+#     # data_json = json.dumps(data)
+#     headers = {"Content-Type":"application/x-www-form-urlencoded",       
+#            "Connection":"Keep-Alive","Referer":"api.weixin.qq.com"};       
+#     #与网站构建一个连接      
+#     conn = httplib.HTTPConnection(url);     
+#     print "aaa"  
+#     #开始进行数据提交   同时也可以使用get进行      
+#     conn.request(method="POST", url = '/', body=data_json);       
+#     #返回处理后的数据      
+#     response = conn.getresponse();       
+#     #判断是否提交成功      
+    # for line in response.readlines():
+    #     print line
+#     conn.close();    
+
+
+def customer_breach_remind(openId):
+    # get access_token
+    url_request_token = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx97b25a5e35916ef6&secret=eff7f6509ec87516cb0c442aec7dd7e9"
+    urlfile = urllib2.urlopen(url_request_token)
+    data_token = urlfile.read()
+    data_token = json.loads(data_token)
+    access_token = data_token["access_token"]
+
+    # send remind message
+    url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=%s" % access_token
+    req = urllib2.Request(url)
+    
+    data = {
+            "touser":openId,
+            "msgtype":"text",
+            "text":
+                {
+                "content":"你已违约!"
+                }
+            }
+
+    data_json = json.dumps(data)
+
+    # data_json = urllib.urlencode(data_json)
+    print data_json
+    res = urllib2.urlopen(req, data_json)
+    # print res

@@ -1,0 +1,87 @@
+*{
+    list-style-type:none;
+}
+ 
+a:link{text-decoration:none}        /*超链接状态*/
+a:visited{text-decoration:none}    /*超链接被点击过的状态*/
+a:hover{text-decoration:none}     /*鼠标移至超链接上方的状态*/
+a:active{text-decoration:none}     /*鼠标点击超链接时的状态*/
+
+#pageone .page{
+     width:260px;
+     margin:0 auto;
+     margin-top:20px;
+}
+#pageone .page .input-row{
+    padding:5px;
+}
+
+#pageone .page .input-row .input-text{
+    display:inline-block;
+    padding:5px;
+    font-size:18px;
+    text-shadow: 0 -1px 1px #eee;
+}
+
+#pageone .page .input-row .label-name,.label-phone,.label-carNum{
+    margin:0;
+    margin-right:90px;
+    font-weight: 900;
+    font-style: italic;
+ 
+}
+
+
+.page-content{
+     padding:4px;
+}
+
+.ui-shadow-inset{
+     width:150px;
+     display:inline-block;
+     margin:0px;
+}
+
+.input-row .ui-select{
+     display:inline-block;
+     float:left;
+     width:82px;
+     line-height:16px;
+}
+
+.ui-select .ui-btn-icon-right .ui-btn-inner{
+    padding-right:25px;
+}
+.ui-radio .ui-btn-icon-left .ui-btn-inner{
+    padding-left:35px;
+    padding-right:15px;
+}
+
+.ui-body-c{
+     background-color:#F5F5F5;  
+     border:0;
+}
+.ui-shadow-inset {
+    box-shadow:0 1px 4px rgba(0,0,0,0);
+}
+
+.input-row .ui-select .ui-btn-icon-right{
+     margin:0;
+   
+}
+
+.input-row .mybtn{
+    display:inline-block;
+    margin-right:30px; 
+    float:right;
+}
+.ui-radio{
+    display:inline-block;
+
+}
+.ui-btn-icon-left{
+    display:inline-block;
+    width:80px;   
+    height:40px;
+    
+}

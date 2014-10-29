@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+        <meta name="viewport"content="width=device-width, initial-scale=1"/>
+        <script type="text/javascript" src="/static/js/jquery-1.9.0.min.js"></script>
+        <title>提示</title>
+     
+        <style>
+            body{
+                background:#3D3D3D;
+            }
+            #pageone .load_img{
+                width:103px;
+                height:103px;
+                margin:0 auto;
+                margin-top:100px;
+            }
+        </style>
+    </head>
+    <body>
+          <div data-role="page" id="pageone" >
+              <div class="load_img">
+
+                    
+                    <h2 style="color:white;">您好，请在个人信息中输入车牌号，方便为您进行预约服务。</h2>
+
+              </div>
+          </div>
+    </body>
+</html>

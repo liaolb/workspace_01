@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+        <meta name="viewport"content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="http://lib.sinaapp.com/js/jquery-mobile/1.3.1/jquery.mobile-1.3.1.css">
+        <link rel="stylesheet" href="/static/css/CustomerShopList.css">
+        <script type="text/javascript" src="/static/js/jquery-1.9.0.min.js"></script>
+        <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery-mobile/1.3.1/jquery.mobile-1.3.1.js"></script>
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+        <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+        <script>
+            function myFeedback(){
+                document.location.href="#successPage";
+                // document.location.href="#noAutoOrderFailPage";
+                // document.location.href="#unFinishFailPage";
+            }
+        </script>
+        <style>
+            body{
+               line-height: 18px;
+            }
+        </style>
+    </head>
+    <body onload="myFeedback()">
+        <div data-role="page" id="pageone">
+           
+        </div> 
+
+        <div data-role="page" id="successPage">
+              <div data-role="header">
+                <h1>预约信息</h1>
+              </div>
+            
+              <div data-role="content">
+                    <p style="display:block;width:130px;margin:30px auto;font-size:30px;color:#383838;"> 预约成功 </p>                              
+           <!--        <span>距离预约时间还剩：</span>
+                <span id="span_dt_dt" ></span>
+ -->
+              </div>
+            
+              <div data-role="footer">
+              <h1><a href="#pageone">返回页面</a></h1>
+              </div>
+        </div> 
+
+        <div data-role="page" id="unFinishFailPage">
+              <div data-role="header">
+                <h1>预约失败</h1>
+              </div>
+            
+              <div data-role="content">
+                    <p style="display:block;width:130px;margin:30px auto;font-size:30px;color:#383838;"> 预约失败, 您有未处理的预约单 </p>                              
+           <!--        <span>距离预约时间还剩：</span>
+                <span id="span_dt_dt" ></span>
+ -->
+              </div>
+            
+              <div data-role="footer">
+              <h1><a href="#pageone">返回页面</a></h1>
+              </div>
+        </div> 
+
+        <div data-role="page" id="noAutoOrderFailPage">
+              <div data-role="header">
+                <h1>预约信息</h1>
+              </div>
+            
+              <div data-role="content">
+                    <p style="display:block;width:130px;margin:30px auto;font-size:30px;color:#383838;"> 预约失败, 您的手速过慢啦 </p>                              
+           <!--        <span>距离预约时间还剩：</span>
+                <span id="span_dt_dt" ></span>
+ -->
+              </div>
+            
+              <div data-role="footer">
+              <h1><a href="#pageone">返回页面</a></h1>
+              </div>
+        </div> 
+
+    </body>
+</html>

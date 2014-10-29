@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
+        <meta name="viewport"content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" href="/static/css/bootstrap-responsive.min.css">
+        <link rel="stylesheet" href="/static/css/bootstrap.css">
+        <link rel="stylesheet" href="http://lib.sinaapp.com/js/jquery-mobile/1.3.1/jquery.mobile-1.3.1.css">
+        <link rel="stylesheet" href="/static/css/CustomerShopList.css">
+        <link rel="stylesheet" href="/static/css/bootstrap-responsive.css">
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/CustomerShopList.css">
+        <script type="text/javascript" src="/static/js/jquery-1.9.0.min.js"></script>
+        <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery-mobile/1.3.1/jquery.mobile-1.3.1.js"></script>
+        <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/js/bootstrap.js"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=wZNqARgljDouaTQYxPFEEm7k&v=1.0"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=wZNqARgljDouaTQYxPFEEm7k"></script>
+        
+        <title>查询附近</title>
+        <style>
+            .ui-br{
+                width:90%;
+                float:right;
+                }
+       
+
+         
+        </style>
+        <script>
+            var customerId = "{{customerId}}";
+            function send_msg(shopId_order){
+                // $.ajax({
+                //     type: "post",
+                //     url: "/customersearchlist",
+                //     data: {
+                //         shopId_order:shopId_order
+                //     },
+                //     success: function(data){
+                //         alert(data);
+                //     },
+                //     dataType:"json"
+                // });
+                $.post("http://2.cargotest.sinaapp.com/customerorder",
+                    {
+                      shopId_order:shopId_order,
+                      customerId:customerId
+                    },
+                    function (data, status) {
+                        if(data=="has unfinished record") {
+                            document.location.href="#unFinishFailPage";
+                        }
+                        else if(data=="has no auto order") {
+                            document.location.href="#noAutoOrderFailPage";
+                        }
+                        else {
+                            document.location.href="#successPage";          
+                        }
+                    }
+                );
+            }
+            // function loadContentStyle(light){
+            //     alert(light);
+            //      document.getElementById("mystar-light").style.height=light-height+"px";
+            // }
+            
+            minsold=30;
+            seconds = 59;
+            function show_time(){
+                if(minsold != 0){
+                     window.setTimeout("show_time()", 1000);
+                     if(seconds == 59)
+                         minsold=Math.floor(minsold-1);
+                     seconds=Math.floor(seconds);
+                    span_dt_dt.innerHTML=minsold+" 分 "+seconds+" 秒" ;
+                    if(seconds != 0)
+                        seconds = (seconds-1);
+                    else
+                        seconds = 59;
+                }
+                else 
+                     span_dt_dt.innerHTML="预约时间已到！" ;
+            }
+            show_time();
+                
+         </script>
+    </head>
+	<body>
+    	  <div data-role="page" id="pageone" >    
+            <div class="set-myHeight">  
+               <div data-role="header">
+
+                   <div class="head-left" style="width:70%;display:inline-block;">
+                      <form id="myform" action="/customersearchlist" method="post">
+                          <div data-role="fieldcontain"  style="text-align:center;">
+                              <label for="shop_name"></label>
+                              <input type="search" name="shop_name" id="shop_name"  placeholder="搜索附近洗车店"/>
+                          </div> 
+                      </form>
+                    </div>
+
+                    <div class="head-right" style="display:inline-block;float:right;margin:5px;" id="navi_map">
+                            <a onclick='document.location.href="/customermap"' data-role="button" data-icon="arrow-u" id="collect" class="no" style="">地图</a>
+                    </div>
+               </div>
+              
+              <br/>
+              {% for item in items %}
+              <div data-role="content" class="shopinfo" >
+                     <div class="span2">
+                           <a onclick="document.location.href='http://2.cargotest.sinaapp.com/customershopdetail?shopId={{item[4]}}'">
+                              <img data-src="holder.js/300x200"src={{item[5]}} alt="">
+                           </a>
+                      </div>
+                      <div class="f-right">
+                           <span class="shopName"><a onclick="document.location.href='http://2.cargotest.sinaapp.com/customershopdetail?shopId={{item[4]}}'">{{item[0]}}</a></span>
+                           <div class="orderOne"> 
+                               <!--  if 可以预约  -->
+                                <a onclick="send_msg('{{item[4]}}');"  data-rel="dialog" > 预约</a>
+                             <!--  else 不可预约 
+                               <span style="color:gray;"> 预约</span> -->
+                          </div>
+                           <br/><br/>
+                          <div onclick="document.location.href='http://2.cargotest.sinaapp.com/customershopdetail?shopId={{item[4]}}'">
+                               <span class="starRating">  距离: {{item[3]}}公里</span><br/>
+                               <span class="starRating">  星级: </span>
+                               <i class="mystar-light"  data-transition="slide" style="width:{{item[1]}}px;">&nbsp;</i>
+                               <i class="mystar-none"  data-transition="slide" style="width:{{item[6]}}px;">&nbsp;</i>
+                          </div>  
+                               <span class="phone">  电话:   {{item[2]}}  </span> 
+                          </div>
+              </div>
+              {% end %}
+
+          </div>
+              <div data-role="footer">
+                  <h1><a class="more-Info" href="#">加载更多 >><i class=" icon-star">  </i></a></h1>
+              </div>
+   		 </div> 
+    
+   		 <div data-role="page" id="successPage">
+              <div data-role="header">
+                <h1>预约信息</h1>
+              </div>
+            
+              <div data-role="content">
+                    <p style="display:block;width:130px;margin:30px auto;font-size:30px;color:#383838;"> 预约成功 </p>                              
+           <!--        <span>距离预约时间还剩：</span>
+                <span id="span_dt_dt" ></span>
+ -->
+              </div>
+            
+              <div data-role="footer">
+              <h1><a href="#pageone">返回页面</a></h1>
+              </div>
+   		 </div> 
+
+       <div data-role="page" id="unFinishFailPage">
+              <div data-role="header">
+                <h1>预约失败</h1>
+              </div>
+            
+              <div data-role="content">
+                    <p style="display:block;width:130px;margin:30px auto;font-size:30px;color:#383838;"> 预约失败, 您有未处理的预约单 </p>                              
+           <!--        <span>距离预约时间还剩：</span>
+                <span id="span_dt_dt" ></span>
+ -->
+              </div>
+            
+              <div data-role="footer">
+              <h1><a href="#pageone">返回页面</a></h1>
+              </div>
+       </div> 
+
+       <div data-role="page" id="noAutoOrderFailPage">
+              <div data-role="header">
+                <h1>预约信息</h1>
+              </div>
+            
+              <div data-role="content">
+                    <p style="display:block;width:130px;margin:30px auto;font-size:30px;color:#383838;"> 预约失败, 您的手速过慢啦 </p>                              
+           <!--        <span>距离预约时间还剩：</span>
+                <span id="span_dt_dt" ></span>
+ -->
+              </div>
+            
+              <div data-role="footer">
+              <h1><a href="#pageone">返回页面</a></h1>
+              </div>
+       </div> 
+
+	</body>
+</html>
